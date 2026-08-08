@@ -1,0 +1,2 @@
+# SnipClip
+Total Commander Clipboardmanager
