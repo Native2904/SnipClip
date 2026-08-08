@@ -1,0 +1,7 @@
+[plugininstall]
+description=SnipClip - Zwischenablage-Textverlauf mit Bearbeitungsfunktion
+type=wfx
+file=SnipClip.wfx
+file=SnipClip.wfx64
+defaultdir=SnipClip
+version=0.1
