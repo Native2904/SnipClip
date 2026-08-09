@@ -2,8 +2,6 @@
 
 Ein Total-Commander-Plugin, das deine Zwischenablage in ein durchsuchbares, dauerhaftes Verzeichnis verwandelt. Kein separates Tool, kein Tray-Icon, kein eigenes Fenster, das ständig rumsteht – SnipClip lebt komplett innerhalb von TC, als virtuelles Panel unter `\SnipClip`.
 
-<img width="1918" height="929" alt="2026-08-08_220316" src="https://github.com/user-attachments/assets/4e8e5e70-02bc-425f-b5d1-ac4cbf6d01c5" />
-
 *[English version](README.en.md) · [Русская версия](README.ru.md)*
 
 ## Chapters
@@ -57,9 +55,9 @@ Willst du bestimmte Befehle lieber direkt an der Wurzel haben (z. B. weil du oft
 
 ### `[Theme]` – Optik
 
-Eigenes "Basic"-Theme ("Alien Blood") als Wiedererkennungsmerkmal – warum jedes unserer Plugins sein eigenes bekommt: siehe [Basic-Theme-Handbrief](notes/basic-theme/basic-theme.de.md). Für Konsistenz mit anderen Plugins: `Name=gruvbox|everforest|solarized`, je mit `Mode=dark|light`. `NoColors=1` unter `[Settings]` schaltet jedes Theme komplett ab.
+Eigenes "Basic"-Theme ("Alien Blood") als Wiedererkennungsmerkmal. Für Konsistenz mit anderen Plugins: `Name=gruvbox|everforest|solarized`, je mit `Mode=dark|light`. `NoColors=1` unter `[Settings]` schaltet jedes Theme komplett ab.
 
-**`FontBrightness=`/`BackgroundBrightness=`** (je -3 bis +3, Standard 0) – Helligkeit über feste, kuratierte Stufen feinjustieren. Ergibt eine Kombination zu wenig Kontrast, greift automatisch ein Sicherheitswert, mit Warnzeile im Alt+Enter-Fenster.
+**`FontBrightness=`/`BackgroundBrightness=`** (je -3 bis +3, Standard 0) – Helligkeit über feste, kuratierte Stufen feinjustieren. Warum genau sieben Stufen und warum Font/Hintergrund unterschiedlich stark reagieren: siehe [Brightness-Handbrief](notes/basic-theme/basic-theme.de.md). Ergibt eine Kombination zu wenig Kontrast, greift automatisch ein Sicherheitswert, mit Warnzeile im Alt+Enter-Fenster.
 
 ### `[lister]` – der Editor
 

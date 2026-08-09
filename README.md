@@ -2,8 +2,6 @@
 
 A Total Commander plugin that turns your clipboard into a searchable, persistent directory. No separate tool, no tray icon, no window of its own sitting around – SnipClip lives entirely inside TC, as a virtual panel under `\SnipClip`.
 
-<img width="1918" height="929" alt="2026-08-08_220316" src="https://github.com/user-attachments/assets/4e8e5e70-02bc-425f-b5d1-ac4cbf6d01c5" />
-
 *[Deutsche Version](README.md) · [Русская версия](README.ru.md)*
 
 ## Chapters
@@ -57,9 +55,9 @@ If you'd rather have certain commands directly at root (e.g. because you click i
 
 ### `[Theme]` – look
 
-Its own "Basic" theme ("Alien Blood") as a recognition trait – why each of our plugins gets its own: see the [Basic theme note](notes/basic-theme/basic-theme.en.md). For consistency with other plugins: `Name=gruvbox|everforest|solarized`, each with `Mode=dark|light`. `NoColors=1` under `[Settings]` disables any theme entirely.
+Its own "Basic" theme ("Alien Blood") as a recognition trait. For consistency with other plugins: `Name=gruvbox|everforest|solarized`, each with `Mode=dark|light`. `NoColors=1` under `[Settings]` disables any theme entirely.
 
-**`FontBrightness=`/`BackgroundBrightness=`** (each -3 to +3, default 0) – fine-tune brightness through fixed, curated steps. If a combination ends up too low-contrast, a safe fallback kicks in automatically, with a warning line in the Alt+Enter window.
+**`FontBrightness=`/`BackgroundBrightness=`** (each -3 to +3, default 0) – fine-tune brightness through fixed, curated steps. Why exactly seven steps, and why font/background respond by different amounts: see the [brightness note](notes/basic-theme/basic-theme.en.md). If a combination ends up too low-contrast, a safe fallback kicks in automatically, with a warning line in the Alt+Enter window.
 
 ### `[lister]` – the editor
 
