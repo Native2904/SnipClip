@@ -2,6 +2,9 @@
 
 Плагин для Total Commander, превращающий буфер обмена в доступный для поиска, постоянный каталог. Не отдельная программа, без значка в трее, без собственного постоянно открытого окна — SnipClip полностью живёт внутри TC, как виртуальная панель под `\SnipClip`.
 
+<img width="1920" height="862" alt="2026-08-09_081458" src="https://github.com/user-attachments/assets/552e62ff-a180-4be1-9244-d2659b0321cb" />
+
+
 *[Deutsche Version](README.md) · [English version](README.en.md)*
 
 ## Chapters
