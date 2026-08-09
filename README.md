@@ -1,119 +1,126 @@
 # SnipClip
 
-A Total Commander plugin that turns your clipboard into a searchable, persistent directory. No separate tool, no tray icon, no window of its own sitting around – SnipClip lives entirely inside TC, as a virtual panel under `\SnipClip`.
+Ein Total-Commander-Plugin, das deine Zwischenablage in ein durchsuchbares, dauerhaftes Verzeichnis verwandelt. Kein separates Tool, kein Tray-Icon, kein eigenes Fenster, das ständig rumsteht – SnipClip lebt komplett innerhalb von TC, als virtuelles Panel unter `\SnipClip`.
 
-<img width="1920" height="862" alt="2026-08-09_081458" src="https://github.com/user-attachments/assets/552e62ff-a180-4be1-9244-d2659b0321cb" />
-
-
-*[Deutsche Version](README.md) · [Русская версия](README.ru.md)*
+*[English version](README.en.md) · [Русская версия](README.ru.md)*
 
 ## Chapters
 - [What it can](#what-it-can)
 - [Specific](#specific)
-- [Architecture, briefly](#architecture-briefly)
+- [Architektur, kurz erklärt](#architektur-kurz-erklärt)
 - [Installation](#installation)
 - [Build](#build)
 - [License](#license)
 
 ## What it can
 
-You copy as usual – Ctrl+C, from any program. SnipClip picks that up in the background (ClipWatch, an invisible window registered with Windows for clipboard changes, no polling) and drops the text into the `\SnipClip` panel as a virtual file.
+Du kopierst wie immer – Strg+C, egal aus welchem Programm. SnipClip fängt das im Hintergrund ab (ClipWatch, ein unsichtbares Fenster, das sich bei Windows für Zwischenablage-Änderungen anmeldet, kein Polling) und legt den Text als virtuelle Datei im `\SnipClip`-Panel ab.
 
-**Passwords stay out.** When an app deliberately copies something it doesn't want tracked – Bitwarden, KeePassXC, 1Password, Chrome incognito – it marks that with an official Windows signal. SnipClip honors it and leaves those copies completely untouched. Honest caveat: this is a voluntary request, not an enforced block – some sources simply don't set the signal. Anyone who wants to capture everything anyway for their own testing can turn that off.
+**Passwörter bleiben außen vor.** Kopiert eine App bewusst etwas, das nicht mitgeschnitten werden soll – Bitwarden, KeePassXC, 1Password, Chrome im Inkognito-Modus –, markiert sie das mit einem offiziellen Windows-Signal. SnipClip hält sich daran und lässt diese Kopien komplett unangetastet. Ehrlich dazu: Das ist eine freiwillige Bitte, keine erzwungene Sperre – manche Quellen setzen das Signal schlicht nicht. Wer für eigene Tests trotzdem alles mitschneiden will, kann das per Schalter abstellen.
 
-**The history is fundamentally immutable** – but not entirely without an escape hatch anymore. Originally, only "! Verlauf leeren" (clear everything at once) could ever remove anything. Now, if something wrong ends up in there, a single entry can also be deleted – guarded by its own extra confirmation on top of TC's normal delete prompt. Anyone who prefers the original strict rule can turn this back off.
+**Die Historie ist grundsätzlich unveränderlich** – aber nicht mehr ganz ohne Ausweg. Ursprünglich galt: nur `! Verlauf leeren` (alles auf einmal) durfte je etwas entfernen. Mittlerweile lässt sich, wenn doch mal was Falsches drinsteht, auch ein einzelner Eintrag löschen – gesichert durch eine eigene, zusätzliche Bestätigung obendrauf auf TCs normale Lösch-Nachfrage. Wer die alte, strikte Regel lieber komplett beibehalten will, schaltet das per Einstellung wieder ab.
 
-**Editing works, just not on the original.** F3 opens a snip in SnipClip's own Lister plugin. Ctrl+E switches to edit mode (the background turns light), you correct it, Ctrl+S writes straight back to the clipboard. The history row itself stays unchanged, you just see noted whether and how much it was last edited.
+**Bearbeiten geht, nur nicht am Original.** F3 öffnet einen Snip in SnipClips eigenem Lister-Plugin. Strg+E schaltet auf Bearbeitungsmodus (der Hintergrund wird hell), du korrigierst, Strg+S schreibt direkt zurück in die Zwischenablage. Die Historie-Zeile selbst bleibt unverändert, du siehst nur zusätzlich vermerkt, dass und wie stark zuletzt editiert wurde.
 
-**What matters to you, you pin.** F5 or drag & drop into a category under `! StickySnips` – create categories with F7. Pinned snips survive even once the rest of the history has long rotated out.
+**Was dir wichtig ist, pinnst du.** F5 oder Drag & Drop in eine Kategorie unter `! StickySnips` – Kategorien legst du mit F7 an. Gepinnte Snips überleben, auch wenn der Rest der Historie längst rausrotiert ist.
 
-**Merge several fragments into one**, before you use them – code fragments or text pieces you copy one after another into the same typed name under `! Textbaustein` get appended there instead of replaced. Details on why this only works one at a time: see the [Textbaustein note](notes/textbaustein/textbaustein.en.md).
+**Mehrere Fragmente zu einem Ganzen zusammenführen**, bevor du sie einsetzt – Code-Bausteine oder Textstücke, die du nacheinander in denselben getippten Namen unter `! Textbaustein\Entwurf` kopierst, werden dort angehängt statt ersetzt. Fertig gesammelt? Per F6 aus `Entwurf\` heraus umbenennen sichert das Ergebnis endgültig. Details dazu, warum das Anhängen nur einzeln nacheinander funktioniert: siehe [Textbaustein-Handbrief](notes/textbaustein/textbaustein.de.md).
 
-**Copy a file instead of text**, and SnipClip ignores it by default. Turn on path resolution and the file path gets captured as text instead, collected under `! Pfade`, completely separate from the main history.
+**Kopierst du mal eine Datei statt Text**, ignoriert SnipClip das standardmäßig. Schaltest du die Pfad-Auflösung aktiv ein, wird der Dateipfad stattdessen als Text erfasst und landet gesammelt unter `! Pfade`, komplett getrennt von der Haupt-Historie.
 
-**New clips appear live**, no manual Ctrl+R needed – once you've interacted with the panel once (e.g. Alt+Enter), the view refreshes automatically after every new capture.
+**Neue Clips tauchen live auf**, ohne manuelles Strg+R – sobald du einmal mit dem Panel interagiert hast (z. B. Alt+Enter), aktualisiert sich die Ansicht automatisch nach jedem neuen Capture.
 
-Alt+Enter on a single entry shows source, category (for pinned snips), timestamp (absolute and relative), edit status, and the full content. Alt+Enter on one of the special rows shows an overview instead – runtime, session stats, source ranking, StickySnips counts, edit statistics, actual disk usage.
+Alt+Enter auf einen einzelnen Eintrag zeigt Herkunft, Kategorie (bei gepinnten Snips), Zeitpunkt (absolut und relativ), Bearbeitungsstatus und den vollen Inhalt. Alt+Enter auf eine der Sonderzeilen zeigt stattdessen eine Gesamtübersicht – Laufzeit, Session-Statistik, Quellen-Ranking, StickySnips-Zahlen, Bearbeitungs-Statistik, echte Speicherbelegung.
 
 ## Specific
 
-### The panel structure: `! menu`
+### Die Panel-Struktur: `! menu`
 
-All command rows (`! ClipWatch pausieren`, `! Verlauf leeren`, `! StickySnips`, `! Pfade`, `! Textbaustein`) live tucked under a single row by default: `! menu`. Keeps the root uncluttered – only your actual clips sit there directly visible.
+Alle Befehlszeilen (`! ClipWatch pausieren`, `! Verlauf leeren`, `! StickySnips`, `! Pfade`, `! Textbaustein`) stecken standardmäßig gesammelt unter einer einzigen Zeile: `! menu`. Das hält die Wurzel aufgeräumt – nur deine echten Clips stehen direkt sichtbar da.
 
 ```ini
 [menu]
 RootButtons=
 ```
 
-If you'd rather have certain commands directly at root (e.g. because you click into StickySnips often), list their keys comma-separated: `RootButtons=Sticky,Path`. Available keys: `Pause`, `Clear`, `Sticky`, `Path`, `Textbaustein`.
+Willst du bestimmte Befehle lieber direkt an der Wurzel haben (z. B. weil du oft in StickySnips reinklickst), trägst du ihre Schlüssel kommagetrennt ein: `RootButtons=Sticky,Path`. Verfügbare Schlüssel: `Pause`, `Clear`, `Sticky`, `Path`, `Textbaustein`, `Comments`.
 
-### `[history]` – history basics
+Jede Sonderzeile hat ihr eigenes kleines Icon (statt TCs Standard-Datei-/Ordner-Symbol) – erleichtert das Erkennen auf einen Blick, besonders wenn mehrere davon nebeneinander in `! menu` stehen.
 
-- **`max_entries`** (default 100) – max entries at once, oldest gets dropped automatically
-- **`name_preview_length`** (default 20) – characters used for the panel name
-- **`persist_history`** (default 1) – survives a TC restart or not
-- **`dedup_consecutive`** (default 1) – two identical copies in a row create only one entry
-- **`AllowSingleDelete`** (default 1) – whether individual entries can be deleted at all
+### `[history]` – Verlauf, Grundeinstellungen
 
-### `[Theme]` – look
+- **`max_entries`** (Standard 100) – maximale Einträge gleichzeitig, ältester fliegt automatisch raus
+- **`name_preview_length`** (Standard 20) – Zeichen für den Panel-Namen
+- **`persist_history`** (Standard 1) – überlebt einen TC-Neustart oder nicht
+- **`dedup_consecutive`** (Standard 1) – zwei identische Kopien hintereinander erzeugen nur einen Eintrag
+- **`AllowSingleDelete`** (Standard 1) – ob einzelne Einträge überhaupt löschbar sind
 
-Its own "Basic" theme ("Alien Blood") as a recognition trait. For consistency with other plugins: `Name=gruvbox|everforest|solarized`, each with `Mode=dark|light`. `NoColors=1` under `[Settings]` disables any theme entirely.
+### `[Theme]` – Optik
 
-**`FontBrightness=`/`BackgroundBrightness=`** (each -3 to +3, default 0) – fine-tune brightness through fixed, curated steps. Why exactly seven steps, and why font/background respond by different amounts: see the [brightness note](notes/basic-theme/basic-theme.en.md). If a combination ends up too low-contrast, a safe fallback kicks in automatically, with a warning line in the Alt+Enter window.
+Eigenes "Basic"-Theme ("Alien Blood") als Wiedererkennungsmerkmal. Für Konsistenz mit anderen Plugins: `Name=gruvbox|everforest|solarized`, je mit `Mode=dark|light`. `NoColors=1` unter `[Settings]` schaltet jedes Theme komplett ab.
 
-### `[lister]` – the editor
+**`FontBrightness=`/`BackgroundBrightness=`** (je -3 bis +3, Standard 0) – Helligkeit über feste, kuratierte Stufen feinjustieren. Warum genau sieben Stufen und warum Font/Hintergrund unterschiedlich stark reagieren: siehe [Brightness-Handbrief](notes/basic-theme/basic-theme.de.md). Ergibt eine Kombination zu wenig Kontrast, greift automatisch ein Sicherheitswert, mit Warnzeile im Alt+Enter-Fenster.
 
-Deliberately uses a different theme than the rest of the plugin (dark to read, light to edit): `gruvbox`, `everforest`, or `solarized`. Why saving here works without TC's upload error: see the [AutoReUpload note](notes/autoreupload/autoreupload.en.md).
+**`TimeBasedMode=`** (Standard 0) – ist das gesetzt, entscheidet die aktuelle Uhrzeit über hell/dunkel statt `Mode=` (`LightStartHour=`/`DarkStartHour=`, Standard 6-18 Uhr hell). Live wirksam, kein Neustart nötig. Betrifft nur die Haupt-Dialoge (Properties/Übersicht) – der Lister und die Textbaustein-Kommentarmaske haben ihren eigenen, unabhängigen Strg+E-Hell/Dunkel-Wechsel, den das nicht überschreibt.
 
-**`MonoFont=`/`MonoFontName=`** – your own monospace font instead of Consolas. Already pre-configured for JetBrains Mono (bundled in the `fonts\` folder, SIL Open Font License).
+### `[lister]` – der Editor
 
-### `[sticky]` – the second, curated list
+Nutzt bewusst ein anderes Theme als der Rest des Plugins (dunkel zum Lesen, hell zum Bearbeiten): `gruvbox`, `everforest` oder `solarized`. Warum das Speichern hier ohne TCs Hochladen-Fehlermeldung funktioniert: siehe [AutoReUpload-Handbrief](notes/autoreupload/autoreupload.de.md).
 
-**`default_category`** (default "Unsortiert") – kicks in when you drag straight onto `! StickySnips` itself instead of a category.
+**`MonoFont=`/`MonoFontName=`** – eigene Monospace-Schrift statt Consolas. Bereits vorkonfiguriert für JetBrains Mono (im `fonts\`-Ordner mitgeliefert, SIL Open Font License).
 
-### `[textbaustein]` – merging fragments
+### `[sticky]` – die zweite, kuratierte Liste
 
-**`separator_blank_lines`** (default 1) – how many blank lines sit between appended pieces. Details: [Textbaustein note](notes/textbaustein/textbaustein.en.md).
+**`default_category`** (Standard "Unsortiert") – greift, wenn du direkt auf `! StickySnips` selbst ziehst statt in eine Kategorie.
 
-### `[path_resolve]` – file paths instead of text
+### `[textbaustein]` – Fragmente zusammenführen
 
-Off by default. Once enabled, SnipClip converts file copies to text:
+Neu strukturiert: Anhängen funktioniert nur noch innerhalb von `! Textbaustein\Entwurf\` – die Wurzel von `! Textbaustein` selbst ist "gesichert", dort landet nichts mehr automatisch dazu. Fertig sammeln, dann per **F6** aus `Entwurf\` heraus umbenennen (z. B. `Entwurf\y` → `config-final`) – Ordnerwechsel und finaler Name entstehen dabei in einem Schritt, über TCs eigenen Umbenennen-Dialog.
 
-| Format | Example |
+**`separator_blank_lines`** (Standard 1) – wie viele Leerzeilen zwischen angehängten Stücken.
+
+**`highlight_last_append`** (Standard 1) – öffnest du einen Textbaustein per F3, wird der zuletzt angehängte Teil automatisch markiert (reine Windows-Textauswahl, verschwindet beim ersten Klick).
+
+**Kommentare**: StickySnips und Textbausteine können eine kurze Notiz zur Wiedererkennung bekommen (praktisch bei kurzen Namen wie "y" oder "z"). Alt+Enter zeigt den Kommentar an, der Button "bearbeiten" unten links öffnet eine eigene kleine Maske mit **Strg+E**/**Strg+S** – gleiches Bedienprinzip wie im Lister. `! Kommentare` zeigt alle vergebenen Kommentare auf einen Blick, gestapelt. Details und warum eine eigene Lösung statt DescriptEdit direkt: siehe [Kommentar-Handbrief](notes/comments/comments.de.md).
+
+### `[path_resolve]` – Datei-Pfade statt Text
+
+Standardmäßig aus. Aktiviert, wandelt SnipClip Datei-Kopien in Text um:
+
+| Format | Beispiel |
 |---|---|
-| `local` | `C:\Users\Name\File.txt` |
-| `forwardslash` | `C:/Users/Name/File.txt` |
-| `unc` | `\\server\share\File.txt` |
-| `fileuri` | `file:///C:/Users/Name/File.txt` |
-| `wsl` | `/mnt/c/Users/Name/File.txt` |
+| `local` | `C:\Users\Name\Datei.txt` |
+| `forwardslash` | `C:/Users/Name/Datei.txt` |
+| `unc` | `\\server\freigabe\Datei.txt` |
+| `fileuri` | `file:///C:/Users/Name/Datei.txt` |
+| `wsl` | `/mnt/c/Users/Name/Datei.txt` |
 
-`AllowExtensions`/`AllowFolders` restrict this via a semicolon-separated list.
+`AllowExtensions`/`AllowFolders` grenzen das per Semikolon-Liste ein.
 
-### `[Settings]` – misc
+### `[Settings]` – Sonstiges
 
-- **`RespectClipboardExclude`** (default 1) – honor the password-manager signal
-- **`StartPaused`** (default 0) – ClipWatch starts active or deliberately inactive
-- **`LiveRefreshAfterCapture`** (default 1) – panel refreshes automatically after a new capture
+- **`RespectClipboardExclude`** (Standard 1) – Passwort-Manager-Signal respektieren
+- **`StartPaused`** (Standard 0) – ClipWatch startet aktiv oder bewusst inaktiv
+- **`LiveRefreshAfterCapture`** (Standard 1) – Panel aktualisiert sich automatisch nach neuem Capture
 
-### Custom columns
-Four extra columns via TC's column configuration: **Edited**, **Diff**, **Source**, **Age**.
+### Custom-Spalten
+Vier zusätzliche Spalten über TCs Spalten-Konfiguration: **Edited**, **Diff**, **Source**, **Age**.
 
-## Architecture, briefly
+## Architektur, kurz erklärt
 
-Two separate DLLs in the same TC process: `SnipClip.wfx`/`.wfx64` (panel, history, StickySnips, Textbaustein, ClipWatch) and `SnipClipLister.wlx`/`.wlx64` (just the Ctrl+E editor). Why both use the `TC_SnipClip_` window/message prefix: see the [window class naming note](notes/window-class-naming/window-class-naming.en.md).
+Zwei separate DLLs im selben TC-Prozess: `SnipClip.wfx`/`.wfx64` (Panel, Historie, StickySnips, Textbaustein, ClipWatch) und `SnipClipLister.wlx`/`.wlx64` (nur der Strg+E-Editor). Warum beide Fenster/Nachrichten mit `TC_SnipClip_`-Präfix arbeiten: siehe [Fensterklassen-Handbrief](notes/window-class-naming/window-class-naming.de.md).
 
 ## Installation
 
-**WFX:** Configuration → Options → Plugins → File System Plugins → Configure → Add, select `SnipClip.wfx64`.
+**WFX:** Konfiguration → Optionen → Plugins → Dateisystem-Plugins → Konfigurieren → Hinzufügen, `SnipClip.wfx64` wählen.
 
-**WLX:** Configuration → Options → Plugins → Lister Plugins → Configure → Add, select `SnipClipLister.wlx64`, then manually assign it to the `snip` extension.
+**WLX:** Konfiguration → Optionen → Plugins → Lister-Plugins → Konfigurieren → Hinzufügen, `SnipClipLister.wlx64` wählen, danach manuell der Endung `snip` zuordnen.
 
-**Recommended:** set `AutoReUpload=2` in `wincmd.ini` – see the [AutoReUpload note](notes/autoreupload/autoreupload.en.md).
+**Empfohlen:** `AutoReUpload=2` in `wincmd.ini` setzen – siehe [AutoReUpload-Handbrief](notes/autoreupload/autoreupload.de.md).
 
 ## Build
 
-MinGW-w64 (64-bit under `C:\mingw64`, optionally 32-bit under `C:\mingw64\mingw32`). Run `build_debug.bat`, binaries land in `release\`.
+MinGW-w64 (64-Bit unter `C:\mingw64`, optional 32-Bit unter `C:\mingw64\mingw32`). `build_debug.bat` ausführen, Binaries landen in `release\`.
 
 ## License
 
