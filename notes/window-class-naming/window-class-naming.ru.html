@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>SnipClip — Соглашение об именовании оконных классов — как мы пришли к этому решению</title>
+<style>
+  :root {
+    --bg: #0f1a13; --panel: #16241a; --fg: #d8e6de; --muted: #7fa393;
+    --heading: #00e0c4; --green: #39d15c; --yellow: #d6c14a; --border: #24382c;
+    --code-bg: #0a120d;
+  }
+  body { background: var(--bg); color: var(--fg); font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.7; max-width: 780px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+  h1 { color: var(--heading); font-size: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.6rem; }
+  h2 { color: var(--heading); font-size: 1.1rem; margin-top: 2.2rem; }
+  p { margin: 0.9rem 0; }
+  code { background: var(--code-bg); color: var(--yellow); padding: 0.1rem 0.35rem; border-radius: 3px; font-size: 0.92em; }
+  pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.2rem; overflow-x: auto; font-size: 0.88rem; }
+  pre code { background: none; padding: 0; }
+  a { color: var(--green); }
+  strong { color: var(--fg); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<h1>Соглашение об именовании оконных классов — как мы пришли к этому решению</h1>
+
+<p>В Total Commander может быть загружено сразу несколько наших плагинов — SnipClip, RecentTab, другие в будущем — все в одном процессе TC. Если плагин регистрирует фоновое окно (как ClipWatch у SnipClip, отслеживающее изменения буфера обмена) под общим именем вроде "BackgroundWindow", другой одновременно работающий плагин может случайно использовать точно такое же имя — Windows знает оконные классы только в масштабе всей системы, а не отдельно для каждого плагина.</p>
+
+<p>Поэтому каждое окно и каждое именованное сообщение Windows, которое плагин регистрирует сам, получает префикс с именем плагина: <code>TC_SnipClip_BackgroundWnd_v1</code> вместо просто <code>BackgroundWnd</code>. Это предотвращает конфликты между одновременно работающими плагинами, причём плагинам вообще не нужно согласовывать это друг с другом во время выполнения — достаточно самого имени.</p>
+
+<p>Номер версии в конце (<code>_v1</code>) добавлен намеренно: если позже изменится смысл этого оконного класса или сообщения (например, новый формат сообщения), новый номер версии позволит чисто разделить это изменение, не запутывая старые, всё ещё работающие экземпляры плагина.</p>
+
+<h2>Где это применяется в SnipClip</h2>
+
+<p>- Фоновое окно ClipWatch: <code>TC_SnipClip_BackgroundWnd_v1</code></p>
+
+<p>- Зарегистрированное сообщение между WFX и WLX (редактирование в Lister → история): <code>SnipClip_SuppressNextCapture</code></p>
+
+<p>Оба имени находятся централизованно в <code>snip_shared.h</code>, поэтому WFX и WLX гарантированно используют одно и то же значение, не дублируя его в двух местах кода.</p>
+
+</body>
+</html>

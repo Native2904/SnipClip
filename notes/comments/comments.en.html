@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SnipClip — Comments for StickySnips & Textbaustein — how we got to this solution</title>
+<style>
+  :root {
+    --bg: #0f1a13; --panel: #16241a; --fg: #d8e6de; --muted: #7fa393;
+    --heading: #00e0c4; --green: #39d15c; --yellow: #d6c14a; --border: #24382c;
+    --code-bg: #0a120d;
+  }
+  body { background: var(--bg); color: var(--fg); font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.7; max-width: 780px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+  h1 { color: var(--heading); font-size: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.6rem; }
+  h2 { color: var(--heading); font-size: 1.1rem; margin-top: 2.2rem; }
+  p { margin: 0.9rem 0; }
+  code { background: var(--code-bg); color: var(--yellow); padding: 0.1rem 0.35rem; border-radius: 3px; font-size: 0.92em; }
+  pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.2rem; overflow-x: auto; font-size: 0.88rem; }
+  pre code { background: none; padding: 0; }
+  a { color: var(--green); }
+  strong { color: var(--fg); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<h1>Comments for StickySnips & Textbaustein — how we got to this solution</h1>
+
+<p>StickySnips and Textbausteine often carry short, not-very-descriptive names — practical when collecting quickly, but once several are open at once, the name alone often isn't enough to tell them apart. The solution was an additional field, independent of the name: a comment.</p>
+
+<p>Three approaches were on the table for this. A real <code>descript.ion</code> file in the plugin folder would have meant the comment was only reachable through the actual folder, not directly from the virtual panel — ruled out. A completely new comment field with its own input UI would have duplicated work already done in our existing DescriptEdit plugin, which edits the same kind of file comments — also ruled out. In the end we reused DescriptEdit's proven input *approach*, but as standalone code directly inside SnipClip: no need to install DescriptEdit, just the same logic rebuilt.</p>
+
+<p>A dedicated input window was unavoidable either way, since TC's <code>RequestProc</code> interface has no "ask for arbitrary text" type — only username, password, target folder, URL, yes/no. For edit mode we followed the Lister's lead: dark to read, light to edit, Ctrl+E/Ctrl+S to switch and save. The colors deliberately come from <code>[lister] Theme=</code>, not the main theme.</p>
+
+<p>The comment field was originally built just for Textbausteine, then extended to StickySnips — both are curated, secured entries with the same recognition problem. The history itself deliberately gets no comments: too many, too transient entries for it to be worth it.</p>
+
+<p>To keep an overview, <code>! Kommentare</code> lists every comment that's been set, stacked with the name or category in front of each one.</p>
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>SnipClip — Комментарии для StickySnips и Textbaustein — как мы пришли к этому решению</title>
+<style>
+  :root {
+    --bg: #0f1a13; --panel: #16241a; --fg: #d8e6de; --muted: #7fa393;
+    --heading: #00e0c4; --green: #39d15c; --yellow: #d6c14a; --border: #24382c;
+    --code-bg: #0a120d;
+  }
+  body { background: var(--bg); color: var(--fg); font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.7; max-width: 780px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+  h1 { color: var(--heading); font-size: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.6rem; }
+  h2 { color: var(--heading); font-size: 1.1rem; margin-top: 2.2rem; }
+  p { margin: 0.9rem 0; }
+  code { background: var(--code-bg); color: var(--yellow); padding: 0.1rem 0.35rem; border-radius: 3px; font-size: 0.92em; }
+  pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.2rem; overflow-x: auto; font-size: 0.88rem; }
+  pre code { background: none; padding: 0; }
+  a { color: var(--green); }
+  strong { color: var(--fg); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<h1>Комментарии для StickySnips и Textbaustein — как мы пришли к этому решению</h1>
+
+<p>StickySnips и Textbaustein часто носят короткие, малоинформативные имена — удобно при быстром сборе, но когда открыто сразу несколько записей, одного имени часто не хватает для узнавания. Решением стало дополнительное, независимое от имени поле — комментарий.</p>
+
+<p>Для реализации рассматривались три пути. Настоящий файл <code>descript.ion</code> в папке плагина означал бы, что комментарий доступен только через реальную папку, а не напрямую из виртуальной панели — отклонено. Совершенно новое поле комментария с собственным интерфейсом ввода стало бы дублированием уже существующего в проекте плагина DescriptEdit, который редактирует такие же файловые комментарии — тоже отклонено. В итоге мы переиспользовали проверенный *подход* к вводу из DescriptEdit, но как самостоятельный код прямо внутри SnipClip: установка DescriptEdit не требуется, просто та же логика построена заново.</p>
+
+<p>Отдельное окно ввода было неизбежно в любом случае, поскольку интерфейс <code>RequestProc</code> в TC не имеет типа "запросить произвольный текст" — только имя пользователя, пароль, целевую папку, URL, да/нет. Для режима редактирования мы ориентировались на Lister: тёмный для чтения, светлый для редактирования, Ctrl+E/Ctrl+S для переключения и сохранения. Цвета намеренно берутся из <code>[lister] Theme=</code>, а не из основной темы.</p>
+
+<p>Поле комментария изначально было сделано только для Textbaustein, а затем расширено на StickySnips — оба являются курируемыми, зафиксированными записями с одной и той же проблемой узнавания. Сама история сознательно не получает комментариев: слишком много, слишком мимолётных записей, чтобы это того стоило.</p>
+
+<p>Чтобы не терять общую картину, <code>! Kommentare</code> показывает все установленные комментарии одним списком, с именем или категорией перед каждым.</p>
+
+</body>
+</html>

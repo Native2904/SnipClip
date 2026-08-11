@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SnipClip — Textbaustein — how we got to this solution</title>
+<style>
+  :root {
+    --bg: #0f1a13; --panel: #16241a; --fg: #d8e6de; --muted: #7fa393;
+    --heading: #00e0c4; --green: #39d15c; --yellow: #d6c14a; --border: #24382c;
+    --code-bg: #0a120d;
+  }
+  body { background: var(--bg); color: var(--fg); font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.7; max-width: 780px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+  h1 { color: var(--heading); font-size: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.6rem; }
+  h2 { color: var(--heading); font-size: 1.1rem; margin-top: 2.2rem; }
+  p { margin: 0.9rem 0; }
+  code { background: var(--code-bg); color: var(--yellow); padding: 0.1rem 0.35rem; border-radius: 3px; font-size: 0.92em; }
+  pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.2rem; overflow-x: auto; font-size: 0.88rem; }
+  pre code { background: none; padding: 0; }
+  a { color: var(--green); }
+  strong { color: var(--fg); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<h1>Textbaustein — how we got to this solution</h1>
+
+<p>The starting idea: you're assembling something — a code block from several fragments you copy one after another from different places, or a text built from several building blocks. Before you actually use the finished result somewhere, you want to see and check it as one connected piece — not paste fragment after fragment separately and hope it fits together.</p>
+
+<p>The first thought was to mark several entries in the panel and drag them somewhere in one motion — surely TC could recognize that as "one action". Technically true, via an official but rarely used function (<code>FsStatusInfo</code>). Except: TC's own copy dialog doesn't ask for a name at all when multiple files are selected, only a target folder. So "select everything at once and merge" wouldn't have worked anyway.</p>
+
+<p>The simpler solution: copy fragment 1 into a Textbaustein named "y", and later fragment 2 also to "y" — both land at the same target. We just need to decide what happens when something's already there: append instead of overwrite. No multi-select detection needed, no batch tracking — just: same name = same target = gets appended.</p>
+
+<h2>How it works — using a code snippet as an example</h2>
+
+<p>Imagine you're assembling a small config file from three fragments copied from three different old projects:</p>
+
+<p>1. Copy fragment 1 (the header section) — lands in the history</p>
+
+<p>2. Drag it onto <code>! Textbaustein</code> (F5), type a name, e.g. <code>config-new</code></p>
+
+<p>3. Copy fragment 2 (the middle part), drag it onto <code>! Textbaustein</code> again, type the SAME name <code>config-new</code> — gets appended, with a blank line in between</p>
+
+<p>4. Append fragment 3 (the closing part) the same way</p>
+
+<p>5. F3 on <code>config-new</code> — now shows all three pieces as one connected whole, in exactly the order you appended them</p>
+
+<p>6. Only now, fully assembled, do you copy/paste the result to where it belongs</p>
+
+<p>The individual original fragments stay unchanged in the history — the Textbaustein is an additional composition, not a replacement.</p>
+
+<h2>About the name itself</h2>
+
+<p>The name you type when copying is just a fleeting label for this collection spot — not a place where the text ends up staying. A single letter or a short abbreviation is entirely enough, deliberately so: you'll type it again for every single fragment, so short beats descriptive here. The actual, properly named file only comes into existence later, when you paste the finished result where it belongs.</p>
+
+<h2>The limitation worth knowing</h2>
+
+<p>Marking several fragments together and dragging them over in one motion does NOT merge them automatically — that would require TC to ask for a shared name during a multi-select copy, which it doesn't. It only works reliably one at a time, in sequence, typing the same name each time — but without any guesswork about which order things landed in.</p>
+
+<h2>Setting</h2>
+
+<p><code>[textbaustein] separator_blank_lines=1</code> in <code>SnipClip.ini</code> — how many blank lines sit between appended pieces, 0 to 3.</p>
+
+</body>
+</html>

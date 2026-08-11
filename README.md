@@ -2,8 +2,7 @@
 
 Ein Total-Commander-Plugin, das deine Zwischenablage in ein durchsuchbares, dauerhaftes Verzeichnis verwandelt. Kein separates Tool, kein Tray-Icon, kein eigenes Fenster, das ständig rumsteht – SnipClip lebt komplett innerhalb von TC, als virtuelles Panel unter `\SnipClip`.
 
-<img width="1568" height="686" alt="preview" src="https://github.com/user-attachments/assets/ebb81e4a-20e3-4540-9fcf-0849d118842b" />
-
+![SnipClip Panel mit ! menu und Übersichtsfenster](screenshots/overview.png)
 
 *[English version](README.en.md) · [Русская версия](README.ru.md)*
 
@@ -27,9 +26,15 @@ Du kopierst wie immer – Strg+C, egal aus welchem Programm. SnipClip fängt das
 
 **Was dir wichtig ist, pinnst du.** F5 oder Drag & Drop in eine Kategorie unter `! StickySnips` – Kategorien legst du mit F7 an. Gepinnte Snips überleben, auch wenn der Rest der Historie längst rausrotiert ist.
 
-**Mehrere Fragmente zu einem Ganzen zusammenführen**, bevor du sie einsetzt – Code-Bausteine oder Textstücke, die du nacheinander in denselben getippten Namen unter `! Textbaustein\Entwurf` kopierst, werden dort angehängt statt ersetzt. Fertig gesammelt? Per F6 aus `Entwurf\` heraus umbenennen sichert das Ergebnis endgültig. Details dazu, warum das Anhängen nur einzeln nacheinander funktioniert: siehe [Textbaustein-Handbrief](notes/textbaustein/textbaustein.de.md).
+**Mehrere Fragmente zu einem Ganzen zusammenführen**, bevor du sie einsetzt – Code-Bausteine oder Textstücke, die du nacheinander in denselben getippten Namen unter `! Textbaustein\Entwurf` kopierst, werden dort angehängt statt ersetzt. Fertig gesammelt? Per F6 aus `Entwurf\` heraus umbenennen sichert das Ergebnis endgültig. Details dazu, warum das Anhängen nur einzeln nacheinander funktioniert: siehe [Textbaustein-Handbrief](notes/textbaustein/textbaustein.de.html).
 
 **Kopierst du mal eine Datei statt Text**, ignoriert SnipClip das standardmäßig. Schaltest du die Pfad-Auflösung aktiv ein, wird der Dateipfad stattdessen als Text erfasst und landet gesammelt unter `! Pfade`, komplett getrennt von der Haupt-Historie.
+
+**Screenshots landen unter `! Screenshots`** – aber nur von Programmen, die du explizit erlaubst (`[image_capture_sources]` in der INI, whitelist-basiert, gleiches Prinzip wie bei der Pfad-Auflösung). Legt z. B. FastStone Capture nach dem Schließen des Aufnahme-Fensters ein Bild in die Zwischenablage, wird das automatisch als `.bmp` gesichert. Zwei unabhängige Speicherlimits (`max_screenshots`, `max_total_size_mb`) verhindern, dass die Sammlung unkontrolliert wächst – wer zuerst zuschlägt, entfernt den ältesten Screenshot.
+
+**Screenshots lassen sich auch pinnen** – entweder eigenständig (wie Text: F5/Drag & Drop aus `! Screenshots` in eine normale StickySnips-Kategorie) oder verknüpft mit einer bestehenden Notiz, indem beide im selben Unterordner landen. Verknüpfte Einträge zeigen in `! Screenshots` eine eigene Spalte ("Verknuepft") mit dem Namen der zugehörigen Notiz. Löschst du eine Seite einer Verknüpfung, wird nur die Verknüpfung aufgelöst – das jeweils andere Element bleibt vollständig erhalten. Details und warum das so gelöst wurde: siehe [Verknüpfungs-Handbrief](notes/screenshot-linking/screenshot-linking.de.html).
+
+**Jeder Eintrag zeigt automatisch das Icon seiner Quell-Anwendung** vor dem Namen (extrahiert aus der jeweiligen `.exe`) – verknüpfte Einträge bekommen stattdessen ein eigenes Kettenglied-Symbol. Ist die Quelle unbekannt oder die `.exe` inzwischen weg, greift ein Ersatz-Icon (eingebaut, oder eigene `.ico` über `FallbackSourceIcon=`).
 
 **Neue Clips tauchen live auf**, ohne manuelles Strg+R – sobald du einmal mit dem Panel interagiert hast (z. B. Alt+Enter), aktualisiert sich die Ansicht automatisch nach jedem neuen Capture.
 
@@ -39,7 +44,7 @@ Alt+Enter auf einen einzelnen Eintrag zeigt Herkunft, Kategorie (bei gepinnten S
 
 ### Die Panel-Struktur: `! menu`
 
-Alle Befehlszeilen (`! ClipWatch pausieren`, `! Verlauf leeren`, `! StickySnips`, `! Pfade`, `! Textbaustein`) stecken standardmäßig gesammelt unter einer einzigen Zeile: `! menu`. Das hält die Wurzel aufgeräumt – nur deine echten Clips stehen direkt sichtbar da.
+Alle Befehlszeilen (`! ClipWatch pausieren`, `! Verlauf leeren`, `! StickySnips`, `! Pfade`, `! Textbaustein`, `! Kommentare`, `! Screenshots`) stecken standardmäßig gesammelt unter einer einzigen Zeile: `! menu`. Das hält die Wurzel aufgeräumt – nur deine echten Clips stehen direkt sichtbar da.
 
 ```ini
 [menu]
@@ -62,13 +67,13 @@ Jede Sonderzeile hat ihr eigenes kleines Icon (statt TCs Standard-Datei-/Ordner-
 
 Eigenes "Basic"-Theme ("Alien Blood") als Wiedererkennungsmerkmal. Für Konsistenz mit anderen Plugins: `Name=gruvbox|everforest|solarized`, je mit `Mode=dark|light`. `NoColors=1` unter `[Settings]` schaltet jedes Theme komplett ab.
 
-**`FontBrightness=`/`BackgroundBrightness=`** (je -3 bis +3, Standard 0) – Helligkeit über feste, kuratierte Stufen feinjustieren. Warum genau sieben Stufen und warum Font/Hintergrund unterschiedlich stark reagieren: siehe [Brightness-Handbrief](notes/basic-theme/basic-theme.de.md). Ergibt eine Kombination zu wenig Kontrast, greift automatisch ein Sicherheitswert, mit Warnzeile im Alt+Enter-Fenster.
+**`FontBrightness=`/`BackgroundBrightness=`** (je -3 bis +3, Standard 0) – Helligkeit über feste, kuratierte Stufen feinjustieren. Warum genau sieben Stufen und warum Font/Hintergrund unterschiedlich stark reagieren: siehe [Brightness-Handbrief](notes/basic-theme/basic-theme.de.html). Ergibt eine Kombination zu wenig Kontrast, greift automatisch ein Sicherheitswert, mit Warnzeile im Alt+Enter-Fenster.
 
 **`TimeBasedMode=`** (Standard 0) – ist das gesetzt, entscheidet die aktuelle Uhrzeit über hell/dunkel statt `Mode=` (`LightStartHour=`/`DarkStartHour=`, Standard 6-18 Uhr hell). Live wirksam, kein Neustart nötig. Betrifft nur die Haupt-Dialoge (Properties/Übersicht) – der Lister und die Textbaustein-Kommentarmaske haben ihren eigenen, unabhängigen Strg+E-Hell/Dunkel-Wechsel, den das nicht überschreibt.
 
 ### `[lister]` – der Editor
 
-Nutzt bewusst ein anderes Theme als der Rest des Plugins (dunkel zum Lesen, hell zum Bearbeiten): `gruvbox`, `everforest` oder `solarized`. Warum das Speichern hier ohne TCs Hochladen-Fehlermeldung funktioniert: siehe [AutoReUpload-Handbrief](notes/autoreupload/autoreupload.de.md).
+Nutzt bewusst ein anderes Theme als der Rest des Plugins (dunkel zum Lesen, hell zum Bearbeiten): `gruvbox`, `everforest` oder `solarized`. Warum das Speichern hier ohne TCs Hochladen-Fehlermeldung funktioniert: siehe [AutoReUpload-Handbrief](notes/autoreupload/autoreupload.de.html).
 
 **`MonoFont=`/`MonoFontName=`** – eigene Monospace-Schrift statt Consolas. Bereits vorkonfiguriert für JetBrains Mono (im `fonts\`-Ordner mitgeliefert, SIL Open Font License).
 
@@ -84,7 +89,7 @@ Neu strukturiert: Anhängen funktioniert nur noch innerhalb von `! Textbaustein\
 
 **`highlight_last_append`** (Standard 1) – öffnest du einen Textbaustein per F3, wird der zuletzt angehängte Teil automatisch markiert (reine Windows-Textauswahl, verschwindet beim ersten Klick).
 
-**Kommentare**: StickySnips und Textbausteine können eine kurze Notiz zur Wiedererkennung bekommen (praktisch bei kurzen Namen wie "y" oder "z"). Alt+Enter zeigt den Kommentar an, der Button "bearbeiten" unten links öffnet eine eigene kleine Maske mit **Strg+E**/**Strg+S** – gleiches Bedienprinzip wie im Lister. `! Kommentare` zeigt alle vergebenen Kommentare auf einen Blick, gestapelt. Details und warum eine eigene Lösung statt DescriptEdit direkt: siehe [Kommentar-Handbrief](notes/comments/comments.de.md).
+**Kommentare**: StickySnips und Textbausteine können eine kurze Notiz zur Wiedererkennung bekommen (praktisch bei kurzen Namen wie "y" oder "z"). Alt+Enter zeigt den Kommentar an, der Button "bearbeiten" unten links öffnet eine eigene kleine Maske mit **Strg+E**/**Strg+S** – gleiches Bedienprinzip wie im Lister. `! Kommentare` zeigt alle vergebenen Kommentare auf einen Blick, gestapelt. Details und warum eine eigene Lösung statt DescriptEdit direkt: siehe [Kommentar-Handbrief](notes/comments/comments.de.html).
 
 ### `[path_resolve]` – Datei-Pfade statt Text
 
@@ -107,11 +112,11 @@ Standardmäßig aus. Aktiviert, wandelt SnipClip Datei-Kopien in Text um:
 - **`LiveRefreshAfterCapture`** (Standard 1) – Panel aktualisiert sich automatisch nach neuem Capture
 
 ### Custom-Spalten
-Vier zusätzliche Spalten über TCs Spalten-Konfiguration: **Edited**, **Diff**, **Source**, **Age**.
+Fünf zusätzliche Spalten über TCs Spalten-Konfiguration: **Edited**, **Diff**, **Source**, **Age**, **Verknuepft** (nur bei Screenshots belegt, zeigt den Namen einer verknüpften Notiz).
 
 ## Architektur, kurz erklärt
 
-Zwei separate DLLs im selben TC-Prozess: `SnipClip.wfx`/`.wfx64` (Panel, Historie, StickySnips, Textbaustein, ClipWatch) und `SnipClipLister.wlx`/`.wlx64` (nur der Strg+E-Editor). Warum beide Fenster/Nachrichten mit `TC_SnipClip_`-Präfix arbeiten: siehe [Fensterklassen-Handbrief](notes/window-class-naming/window-class-naming.de.md).
+Zwei separate DLLs im selben TC-Prozess: `SnipClip.wfx`/`.wfx64` (Panel, Historie, StickySnips, Textbaustein, ClipWatch) und `SnipClipLister.wlx`/`.wlx64` (nur der Strg+E-Editor). Warum beide Fenster/Nachrichten mit `TC_SnipClip_`-Präfix arbeiten: siehe [Fensterklassen-Handbrief](notes/window-class-naming/window-class-naming.de.html).
 
 ## Installation
 
@@ -119,7 +124,7 @@ Zwei separate DLLs im selben TC-Prozess: `SnipClip.wfx`/`.wfx64` (Panel, Histori
 
 **WLX:** Konfiguration → Optionen → Plugins → Lister-Plugins → Konfigurieren → Hinzufügen, `SnipClipLister.wlx64` wählen, danach manuell der Endung `snip` zuordnen.
 
-**Empfohlen:** `AutoReUpload=2` in `wincmd.ini` setzen – siehe [AutoReUpload-Handbrief](notes/autoreupload/autoreupload.de.md).
+**Empfohlen:** `AutoReUpload=2` in `wincmd.ini` setzen – siehe [AutoReUpload-Handbrief](notes/autoreupload/autoreupload.de.html).
 
 ## Build
 

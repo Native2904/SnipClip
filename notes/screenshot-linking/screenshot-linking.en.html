@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SnipClip — Linking screenshots with StickySnips</title>
+<style>
+  :root {
+    --bg: #0f1a13; --panel: #16241a; --fg: #d8e6de; --muted: #7fa393;
+    --heading: #00e0c4; --green: #39d15c; --yellow: #d6c14a; --border: #24382c;
+    --code-bg: #0a120d;
+  }
+  body { background: var(--bg); color: var(--fg); font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.7; max-width: 780px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+  h1 { color: var(--heading); font-size: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.6rem; }
+  h2 { color: var(--heading); font-size: 1.1rem; margin-top: 2.2rem; }
+  p { margin: 0.9rem 0; }
+  code { background: var(--code-bg); color: var(--yellow); padding: 0.1rem 0.35rem; border-radius: 3px; font-size: 0.92em; }
+  pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.2rem; overflow-x: auto; font-size: 0.88rem; }
+  .box { background: var(--panel); border-left: 3px solid var(--green); border-radius: 4px; padding: 0.9rem 1.2rem; margin: 1.2rem 0; }
+  ul { padding-left: 1.4rem; }
+  li { margin: 0.4rem 0; }
+</style>
+</head>
+<body>
+
+<h1>Linking screenshots with StickySnips</h1>
+
+<p>A screenshot and a matching note should be recognizable as belonging together, without having to type out a name. Dragging a file directly onto another single file isn't supported by TC or Windows - drop targets are always folders. So the link is formed simply by both files living in the same subfolder:</p>
+<pre>StickySnips\tcmd\Lister\
+    note.snip
+    screenshot.bmp</pre>
+
+<p>The folder name carries the actual meaning here - StickySnips otherwise have no freely chosen name, just an automatic preview built from the first characters of the content.</p>
+
+<h2>Standalone image pins</h2>
+<p>A screenshot can also be dragged straight from <code>! Screenshots</code> into a normal, single-level category (<code>StickySnips\Pictures\</code>) with no note involved at all - same as text. Keeping several images together this way is just an ordinary category with several entries. The depth of the path decides which case applies: one level = standalone pin, two levels = a link.</p>
+
+<h2>Delete behavior</h2>
+<p>No matter which side of a link gets deleted, only the link itself dissolves - the other element stays fully intact. A deleted image moves back to <code>! Screenshots</code>; a deleted note only breaks the link, the image stays. Same logic as history↔StickySnip: delete one, the other (independently existing) one is untouched. This doesn't apply to standalone image pins (one level) - those are genuinely deleted, since there's no counterpart there to preserve.</p>
+
+<h2>Visibility in the screenshots folder</h2>
+<p>Inside a sticky subfolder, both files sit visibly side by side. Under <code>! Screenshots</code> itself, though, only images live there, with no visible connection to a note. The <strong>Verknuepft</strong> column shows the linked note's name there (blank = unlinked) - same custom-column mechanism already used for the existing ones (Edited/Diff/Source/Age).</p>
+
+<h2>Storage limit</h2>
+<p>Two independent limits, since image size varies far more than text ever does:</p>
+<pre>[image_capture]
+max_screenshots=50
+max_total_size_mb=200</pre>
+<p>Whichever hits first trims the oldest screenshot.</p>
+
+<h2>Icons</h2>
+<p>Linked entries get their own chain-link icon instead of the source-app icon - "this is linked" is more useful at a glance than "this came from which program". Unlinked entries show the real icon of the source application instead (extracted from its <code>.exe</code>), or - if the source is unknown or that program no longer exists - a fallback icon, the built-in floating eye by default, freely replaceable with your own <code>.ico</code> via <code>FallbackSourceIcon=</code>.</p>
+
+<div class="box">
+Icon priority order: <strong>linked → real source-app icon → fallback icon → TC default</strong>.
+</div>
+
+</body>
+</html>

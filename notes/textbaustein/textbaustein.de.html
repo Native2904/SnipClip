@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>SnipClip — Textbaustein — wie wir zu dieser Lösung kamen</title>
+<style>
+  :root {
+    --bg: #0f1a13; --panel: #16241a; --fg: #d8e6de; --muted: #7fa393;
+    --heading: #00e0c4; --green: #39d15c; --yellow: #d6c14a; --border: #24382c;
+    --code-bg: #0a120d;
+  }
+  body { background: var(--bg); color: var(--fg); font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.7; max-width: 780px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+  h1 { color: var(--heading); font-size: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.6rem; }
+  h2 { color: var(--heading); font-size: 1.1rem; margin-top: 2.2rem; }
+  p { margin: 0.9rem 0; }
+  code { background: var(--code-bg); color: var(--yellow); padding: 0.1rem 0.35rem; border-radius: 3px; font-size: 0.92em; }
+  pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.2rem; overflow-x: auto; font-size: 0.88rem; }
+  pre code { background: none; padding: 0; }
+  a { color: var(--green); }
+  strong { color: var(--fg); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<h1>Textbaustein — wie wir zu dieser Lösung kamen</h1>
+
+<p>Die Ausgangsidee: Du baust dir gerade etwas zusammen — einen Code-Block aus mehreren Fragmenten, die du nacheinander aus verschiedenen Stellen kopierst, oder einen Text aus mehreren Bausteinen. Bevor du das fertige Ergebnis irgendwo einsetzt, willst du es erst als ein zusammenhängendes Stück sehen und prüfen — nicht Fragment für Fragment einzeln einfügen und hoffen, dass es passt.</p>
+
+<p>Der erste Gedanke war, mehrere Einträge im Panel zu markieren und in einem Rutsch irgendwohin zu ziehen — TC sollte das doch als "eine Aktion" erkennen können. Stimmt technisch sogar, über eine offizielle, aber selten genutzte Funktion (<code>FsStatusInfo</code>). Nur: TCs eigener Kopieren-Dialog fragt bei mehreren markierten Dateien gar keinen Namen ab, nur ein Zielverzeichnis. Ein "alles auf einmal markieren und zusammenführen" hätte also gar nicht funktioniert.</p>
+
+<p>Die einfachere Lösung: Kopierst du Fragment 1 in einen Textbaustein namens "y", und später Fragment 2 ebenfalls nach "y" — beide landen am selben Ziel. Wir müssen nur entscheiden, was passiert, wenn dort schon was liegt: anhängen statt überschreiben. Kein Multi-Select-Erkennen nötig, kein Batch-Tracking — nur: gleicher Name = gleiches Ziel = wird angehängt.</p>
+
+<h2>Wie es funktioniert — am Beispiel eines Code-Bausteins</h2>
+
+<p>Stell dir vor, du baust dir eine kleine Konfigurationsdatei aus drei Fragmenten zusammen, die du aus drei verschiedenen alten Projekten kopierst:</p>
+
+<p>1. Fragment 1 kopieren (der Kopfbereich) — landet in der Historie</p>
+
+<p>2. Per F5 auf <code>! Textbaustein</code> ziehen, Namen eintippen, z. B. <code>config-neu</code></p>
+
+<p>3. Fragment 2 kopieren (der mittlere Teil), wieder auf <code>! Textbaustein</code> ziehen, denselben Namen <code>config-neu</code> eintippen — wird angehängt, mit Leerzeile dazwischen</p>
+
+<p>4. Fragment 3 (der Abschluss) genauso anhängen</p>
+
+<p>5. F3 auf <code>config-neu</code> — zeigt jetzt alle drei Stücke als ein zusammenhängendes Ganzes, genau in der Reihenfolge, wie du sie angehängt hast</p>
+
+<p>6. Erst jetzt, fertig zusammengesetzt, kopierst/fügst du das Ergebnis dort ein, wo es hingehört</p>
+
+<p>Die einzelnen Original-Fragmente bleiben dabei unverändert in der Historie stehen — der Textbaustein ist eine zusätzliche Zusammenstellung, kein Ersatz.</p>
+
+<h2>Zum Namen selbst</h2>
+
+<p>Der Name, den du beim Kopieren eingibst, ist nur ein flüchtiges Etikett für diesen Sammelplatz — kein Ort, an dem der Text am Ende bleibt. Ein einzelner Buchstabe oder ein kurzes Kürzel reicht völlig, sogar bewusst: Du tippst ihn ja bei jedem einzelnen Fragment erneut ein, kurz ist hier besser als sprechend. Die eigentliche, ordentlich benannte Datei entsteht erst später, wenn du das fertige Ergebnis dort einfügst, wo es hingehört.</p>
+
+<h2>Die Grenze, die man kennen sollte</h2>
+
+<p>Mehrere Fragmente gemeinsam markieren und in einem Zug rüberziehen führt sie nicht automatisch zusammen — dafür müsste TC beim Mehrfach-Kopieren einen gemeinsamen Namen abfragen, tut es aber nicht. Es funktioniert zuverlässig nur einzeln, nacheinander, mit demselben getippten Namen jedes Mal — dafür ohne Rätselraten, in welcher Reihenfolge was gelandet ist.</p>
+
+<h2>Einstellung</h2>
+
+<p><code>[textbaustein] separator_blank_lines=1</code> in <code>SnipClip.ini</code> — wie viele Leerzeilen zwischen den angehängten Stücken stehen, 0 bis 3.</p>
+
+</body>
+</html>

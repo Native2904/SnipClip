@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>SnipClip — AutoReUpload — wie wir zu dieser Lösung kamen</title>
+<style>
+  :root {
+    --bg: #0f1a13; --panel: #16241a; --fg: #d8e6de; --muted: #7fa393;
+    --heading: #00e0c4; --green: #39d15c; --yellow: #d6c14a; --border: #24382c;
+    --code-bg: #0a120d;
+  }
+  body { background: var(--bg); color: var(--fg); font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.7; max-width: 780px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+  h1 { color: var(--heading); font-size: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.6rem; }
+  h2 { color: var(--heading); font-size: 1.1rem; margin-top: 2.2rem; }
+  p { margin: 0.9rem 0; }
+  code { background: var(--code-bg); color: var(--yellow); padding: 0.1rem 0.35rem; border-radius: 3px; font-size: 0.92em; }
+  pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.2rem; overflow-x: auto; font-size: 0.88rem; }
+  pre code { background: none; padding: 0; }
+  a { color: var(--green); }
+  strong { color: var(--fg); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<h1>AutoReUpload — wie wir zu dieser Lösung kamen</h1>
+
+<p>Wenn du in SnipClips eigenem Lister (Strg+E) etwas bearbeitest und mit Strg+S speicherst, landet der korrigierte Text direkt in der Windows-Zwischenablage — nicht in der Datei, die TC dafür heruntergeladen hat. Trotzdem zeigte TC anfangs bei jedem Öffnen einen Hochladen-Fehler ("Fehler beim Hochladen der Datei!").</p>
+
+<p>Der Grund: Seit Version 8.50 bringt Total Commander eine Resync-Funktion mit — ursprünglich für FTP und ähnliche Plugins gedacht. Ändert sich die letzte Schreibzeit einer heruntergeladenen Datei, versucht TC automatisch, sie zurück ins Plugin hochzuladen. Ohne eine passende Antwort auf diesen Versuch zeigt TC eine Fehlermeldung — auch wenn eigentlich nichts schiefgelaufen ist.</p>
+
+<p>Wir zweckentfremden diesen Mechanismus für unseren lokalen Anwendungsfall: SnipClip beantwortet den Hochladen-Versuch einfach mit einem stillen Erfolg, ohne den Inhalt tatsächlich zu übernehmen (der ist ja über die Zwischenablage längst da, wo er hin soll). <code>AutoReUpload=2</code> in <code>wincmd.ini</code> unter <code>[Configuration]</code> sorgt dafür, dass TC das automatisch versucht, statt jedes Mal nachzufragen.</p>
+
+<h2>Was das für dich bedeutet</h2>
+
+<p>Ohne <code>AutoReUpload=2</code> gesetzt zu haben, kann es sein, dass TC beim Schließen des Lister-Fensters nach einer Bearbeitung fragt, ob hochgeladen werden soll. Ein Klick auf "Ja" schadet nicht — SnipClip nimmt den Versuch entgegen und tut nichts Schädliches damit — ist aber ein unnötiger Klick, den <code>AutoReUpload=2</code> erspart.</p>
+
+<h2>Einstellung</h2>
+
+<p>In <code>wincmd.ini</code> (Total Commander → Konfiguration → Einstellungen direkt ändern):</p>
+
+<pre><code>[Configuration]
+AutoReUpload=2</code></pre>
+
+</body>
+</html>
