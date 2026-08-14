@@ -6,7 +6,7 @@ A Total Commander plugin that turns your clipboard into a searchable, persistent
 
 *[Deutsche Version](README.de.md) · [Русская версия](README.ru.md)*
 
-[Yet Another Clipboard Manager]([https://example.com](https://www.ghisler.ch/board/viewtopic.php?t=87928&start=15&sid=a296119a14e7932f480e24dd9f4b812c))
+[Yet Another Clipboard Manager](https://www.ghisler.ch/board/viewtopic.php?t=87928&start=15&sid=a296119a14e7932f480e24dd9f4b812c)
 
 ## Chapters
 - [What it can](#what-it-can)
