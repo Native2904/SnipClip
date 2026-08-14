@@ -4,7 +4,7 @@ Ein Total-Commander-Plugin, das deine Zwischenablage in ein durchsuchbares, daue
 
 <img width="1917" height="861" alt="2026-08-14_110720" src="https://github.com/user-attachments/assets/f8581bf4-ded9-4640-bb55-6b061c7d20cb" />
 
-*[English version](README.en.md) · [Русская версия](README.ru.md)*
+*[English version](README.md) · [Русская версия](README.ru.md)*
 
 ## Chapters
 - [What it can](#what-it-can)
