@@ -5,7 +5,7 @@ A Total Commander plugin that turns your clipboard into a searchable, persistent
 <img width="1917" height="861" alt="2026-08-14_110720" src="https://github.com/user-attachments/assets/f8581bf4-ded9-4640-bb55-6b061c7d20cb" />
 
 
-*[Deutsche Version](README.md) · [Русская версия](README.ru.md)*
+*[Deutsche Version](README.de.md) · [Русская версия](README.ru.md)*
 
 ## Chapters
 - [What it can](#what-it-can)
