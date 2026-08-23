@@ -2,7 +2,8 @@
 
 A Total Commander plugin that turns your clipboard into a searchable, persistent directory. No separate tool, no tray icon, no window of its own sitting around – SnipClip lives entirely inside TC, as a virtual panel under `\SnipClip`.
 
-<img width="1920" height="870" alt="2026-08-16_233704" src="https://github.com/user-attachments/assets/6ecde860-5329-4dcb-8788-70a1d655ec34" />
+<img width="1919" height="870" alt="2026-08-23_141233" src="https://github.com/user-attachments/assets/93827a4b-ad71-45ea-9146-432d2e1525c8" />
+
 
 *[Deutsche Version](README.de.md) · [Русская версия](README.ru.md)*
 
