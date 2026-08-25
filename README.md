@@ -4,7 +4,7 @@ A Total Commander plugin that turns your clipboard into a searchable, persistent
 
 ![SnipClip panel with ! menu and overview window](screenshots/overview.png)
 
-*[Deutsche Version](README.md) · [Русская версия](README.ru.md)*
+*[Deutsche Version](README_de.md) · [Русская версия](README.ru.md)*
 
 ## Chapters
 - [What it can](#what-it-can)
