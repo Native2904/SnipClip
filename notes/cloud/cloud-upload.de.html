@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>SnipClip — Cloud-Upload (ImgBB & Pastebin) einrichten</title>
+<style>
+  :root {
+    --bg: #0f1a13; --panel: #16241a; --fg: #d8e6de; --muted: #7fa393;
+    --heading: #00e0c4; --green: #39d15c; --yellow: #d6c14a; --border: #24382c;
+    --code-bg: #0a120d;
+  }
+  body { background: var(--bg); color: var(--fg); font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.7; max-width: 780px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+  h1 { color: var(--heading); font-size: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.6rem; }
+  h2 { color: var(--heading); font-size: 1.1rem; margin-top: 2.2rem; }
+  p { margin: 0.9rem 0; }
+  code { background: var(--code-bg); color: var(--yellow); padding: 0.1rem 0.35rem; border-radius: 3px; font-size: 0.92em; }
+  pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.2rem; overflow-x: auto; font-size: 0.88rem; }
+  pre code { background: none; padding: 0; }
+  .box { background: var(--panel); border-left: 3px solid var(--green); border-radius: 4px; padding: 0.9rem 1.2rem; margin: 1.2rem 0; }
+  .warn { background: var(--panel); border-left: 3px solid var(--yellow); border-radius: 4px; padding: 0.9rem 1.2rem; margin: 1.2rem 0; }
+  ul { padding-left: 1.4rem; }
+  li { margin: 0.4rem 0; }
+  a { color: var(--green); }
+  strong { color: var(--fg); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<h1>Cloud-Upload (ImgBB & Pastebin) einrichten</h1>
+
+<p>Der Upload-Button im Alt+Enter-Dialog schickt einen Screenshot zu ImgBB oder einen Text-Eintrag (Verlauf, StickySnip, Textbaustein) zu Pastebin und schreibt die zurückgegebene URL direkt in die Zwischenablage. Beides ist standardmäßig komplett aus — nichts verlässt diesen Rechner, bis du es explizit einrichtest.</p>
+
+<h2>Der Hauptschalter</h2>
+<p>Ein einziger Schalter entscheidet, ob überhaupt irgendetwas hochgeladen werden kann, unabhängig von den einzelnen Diensten:</p>
+<pre><code>[cloud_upload]
+Enabled=0</code></pre>
+<p>Erst auf <code>1</code> stellen, dann greifen die Einstellungen der einzelnen Dienste unten. Der Button selbst bleibt im Dialog komplett unsichtbar, solange <code>Enabled=0</code> ist oder der jeweilige API-Key fehlt — er erscheint nie, nur um dann zu scheitern.</p>
+
+<h2>ImgBB einrichten</h2>
+<p>Kostenlosen Key holen auf <a href="https://api.imgbb.com/">api.imgbb.com</a>, dort in die ini eintragen:</p>
+<pre><code>[cloud_upload_imgbb]
+ApiKey=DEIN_IMGBB_KEY
+ExpirationSec=0</code></pre>
+<p><code>ExpirationSec=0</code> (Standard) heißt: Bilder bleiben dauerhaft online. Ein Wert zwischen 60 und 15552000 (Sekunden) lässt sie stattdessen automatisch nach der angegebenen Zeit verschwinden.</p>
+
+<h2>Pastebin einrichten</h2>
+<p>Hier gibt es zwei unterschiedliche Schlüssel, leicht zu verwechseln:</p>
+<ul>
+  <li><strong>Dev-Key</strong> — dein persönlicher, fester API-Schlüssel. Zu finden auf <a href="https://pastebin.com/api">pastebin.com/api</a> (eingeloggt), Kasten "Your Unique Developer API Key". Wird bei jedem Aufruf gebraucht.</li>
+  <li><strong>User-Key</strong> — bestätigt, dass ein Paste zu deinem eingeloggten Account gehört (private Pastes, eigene Paste-Historie, Power-Member-Vorteile). Ohne ihn wird als Gast gepostet — funktioniert auch, aber ohne diese Vorteile.</li>
+</ul>
+
+<p>Den User-Key holst du dir <strong>einmalig</strong> über einen Login-Aufruf. Er läuft laut Pastebins eigener Dokumentation nicht ab, solange kein neuer erzeugt wird — kein wiederkehrender Schritt. Einmal in PowerShell ausführen:</p>
+<pre><code>$response = Invoke-RestMethod -Uri "https://pastebin.com/api/api_login.php" -Method Post -Body @{
+    api_dev_key = "DEIN_DEV_KEY"
+    api_user_name = "DEIN_BENUTZERNAME"
+    api_user_password = "DEIN_PASSWORT"
+}
+$response</code></pre>
+<p>Die letzte Zeile <code>$response</code> ist wichtig — ohne sie speichert PowerShell das Ergebnis nur, zeigt es aber nicht an. Der ausgegebene Wert ist dein User-Key, kommt in die ini:</p>
+<pre><code>[cloud_upload_pastebin]
+ApiKey=DEIN_DEV_KEY
+UserKey=DAS_ERGEBNIS_VON_OBEN
+Private=1
+ExpireDate=N</code></pre>
+
+<div class="warn">
+Benutzername und Passwort landen bei diesem einmaligen Aufruf nirgendwo dauerhaft — nicht im Plugin, nicht in einer Log-Datei. Sie werden nur für den einen Login-Moment gebraucht. Trotzdem: PowerShell-Verlauf danach nicht versehentlich irgendwo weiterkopieren.
+</div>
+
+<p><code>Private=</code> steuert die Sichtbarkeit neuer Pastes: <code>0</code>=öffentlich, <code>1</code>=unlisted (Standard), <code>2</code>=privat. <code>ExpireDate=</code> steht standardmäßig auf <code>N</code> (nie) — alternativ Pastebins eigene Codes: <code>10M</code>/<code>1H</code>/<code>1D</code>/<code>1W</code>/<code>2W</code>/<code>1M</code>/<code>6M</code>/<code>1Y</code>.</p>
+
+<h2>Der Button im Alt+Enter-Dialog</h2>
+<p>Sobald beide Bedingungen erfüllt sind (Hauptschalter an, passender Key gesetzt), erscheint "Hochladen" neben "OK". Beim Öffnen des Dialogs läuft im Hintergrund sofort ein kurzer Verbindungstest (kein echter Upload, nur ein Erreichbarkeits-Check):</p>
+<ul>
+  <li><strong>Prüfe Verbindung…</strong> — Test läuft, Button noch deaktiviert</li>
+  <li><strong>Verbunden</strong> — Button aktiv, Klick startet den echten Upload</li>
+  <li><strong>Nicht erreichbar</strong> — Button bleibt deaktiviert, kein Upload-Versuch, der ohnehin nur scheitern würde</li>
+  <li><strong>Wird hochgeladen…</strong> — Upload läuft, blockiert den Dialog nicht</li>
+  <li><strong>Hochgeladen, URL kopiert: …</strong> — fertig, URL liegt bereits in der Zwischenablage, kein weiterer Klick nötig</li>
+  <li><strong>Fehlgeschlagen: …</strong> — mit Grund, Button wieder klickbar für einen neuen Versuch</li>
+</ul>
+
+<h2>Sicherheitshinweis</h2>
+<p>Alle Keys stehen im Klartext in <code>SnipClip.ini</code> — genau wie jede andere Einstellung, die das Plugin speichert. Es gibt keinen verschlüsselten Speicherplatz dafür. Wer diese ini-Datei teilt, sichert oder synchronisiert, gibt die Keys mit weiter.</p>
+
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>SnipClip — Настройка облачной загрузки (ImgBB и Pastebin)</title>
+<style>
+  :root {
+    --bg: #0f1a13; --panel: #16241a; --fg: #d8e6de; --muted: #7fa393;
+    --heading: #00e0c4; --green: #39d15c; --yellow: #d6c14a; --border: #24382c;
+    --code-bg: #0a120d;
+  }
+  body { background: var(--bg); color: var(--fg); font-family: -apple-system, "Segoe UI", Roboto, sans-serif;
+    line-height: 1.7; max-width: 780px; margin: 0 auto; padding: 3rem 1.5rem 5rem; }
+  h1 { color: var(--heading); font-size: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.6rem; }
+  h2 { color: var(--heading); font-size: 1.1rem; margin-top: 2.2rem; }
+  p { margin: 0.9rem 0; }
+  code { background: var(--code-bg); color: var(--yellow); padding: 0.1rem 0.35rem; border-radius: 3px; font-size: 0.92em; }
+  pre { background: var(--code-bg); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.2rem; overflow-x: auto; font-size: 0.88rem; }
+  pre code { background: none; padding: 0; }
+  .box { background: var(--panel); border-left: 3px solid var(--green); border-radius: 4px; padding: 0.9rem 1.2rem; margin: 1.2rem 0; }
+  .warn { background: var(--panel); border-left: 3px solid var(--yellow); border-radius: 4px; padding: 0.9rem 1.2rem; margin: 1.2rem 0; }
+  ul { padding-left: 1.4rem; }
+  li { margin: 0.4rem 0; }
+  a { color: var(--green); }
+  strong { color: var(--fg); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<h1>Настройка облачной загрузки (ImgBB и Pastebin)</h1>
+
+<p>Кнопка «Загрузить» в диалоге Alt+Enter отправляет скриншот на ImgBB или текстовую запись (история, StickySnip, Textbaustein) на Pastebin и сразу записывает полученную ссылку в буфер обмена. Обе функции полностью отключены по умолчанию — ничего не покидает этот компьютер, пока вы явно это не настроите.</p>
+
+<h2>Главный переключатель</h2>
+<p>Один переключатель решает, возможна ли загрузка вообще, независимо от отдельных сервисов:</p>
+<pre><code>[cloud_upload]
+Enabled=0</code></pre>
+<p>Сначала установите <code>1</code>, только тогда начнут действовать настройки отдельных сервисов ниже. Сама кнопка остаётся полностью скрытой в диалоге, пока <code>Enabled=0</code> или отсутствует соответствующий API-ключ — она никогда не появляется просто для того, чтобы потом не сработать.</p>
+
+<h2>Настройка ImgBB</h2>
+<p>Получите бесплатный ключ на <a href="https://api.imgbb.com/">api.imgbb.com</a>, внесите его в ini-файл:</p>
+<pre><code>[cloud_upload_imgbb]
+ApiKey=ВАШ_КЛЮЧ_IMGBB
+ExpirationSec=0</code></pre>
+<p><code>ExpirationSec=0</code> (по умолчанию) означает, что изображения остаются онлайн постоянно. Значение от 60 до 15552000 (в секундах) вместо этого автоматически удаляет их по истечении указанного времени.</p>
+
+<h2>Настройка Pastebin</h2>
+<p>Здесь есть два разных ключа, которые легко перепутать:</p>
+<ul>
+  <li><strong>Dev-ключ</strong> — ваш личный, постоянный API-ключ. Находится на <a href="https://pastebin.com/api">pastebin.com/api</a> (в залогиненном состоянии), в блоке «Your Unique Developer API Key». Требуется при каждом запросе.</li>
+  <li><strong>User-ключ</strong> — подтверждает, что paste принадлежит вашему залогиненному аккаунту (приватные paste, собственная история paste, преимущества Power Member). Без него paste публикуется от имени гостя — тоже работает, но без этих преимуществ.</li>
+</ul>
+
+<p>User-ключ получают <strong>один раз</strong>, через запрос входа (login). Согласно документации самого Pastebin, он не истекает, пока не будет создан новый — это не повторяющийся шаг. Выполните один раз в PowerShell:</p>
+<pre><code>$response = Invoke-RestMethod -Uri "https://pastebin.com/api/api_login.php" -Method Post -Body @{
+    api_dev_key = "ВАШ_DEV_КЛЮЧ"
+    api_user_name = "ВАШЕ_ИМЯ_ПОЛЬЗОВАТЕЛЯ"
+    api_user_password = "ВАШ_ПАРОЛЬ"
+}
+$response</code></pre>
+<p>Последняя строка, <code>$response</code>, важна — без неё PowerShell только сохраняет результат, но не показывает его. Выведенное значение — это ваш user-ключ, вносится в ini-файл:</p>
+<pre><code>[cloud_upload_pastebin]
+ApiKey=ВАШ_DEV_КЛЮЧ
+UserKey=РЕЗУЛЬТАТ_СВЕРХУ
+Private=1
+ExpireDate=N</code></pre>
+
+<div class="warn">
+Имя пользователя и пароль нигде не сохраняются при этом одноразовом запросе — ни в плагине, ни в каком-либо лог-файле. Они используются только в момент входа. Тем не менее, не копируйте потом случайно историю PowerShell куда-либо ещё.
+</div>
+
+<p><code>Private=</code> определяет видимость новых paste: <code>0</code>=публичный, <code>1</code>=unlisted (по умолчанию), <code>2</code>=приватный. <code>ExpireDate=</code> по умолчанию <code>N</code> (никогда) — либо собственные коды Pastebin: <code>10M</code>/<code>1H</code>/<code>1D</code>/<code>1W</code>/<code>2W</code>/<code>1M</code>/<code>6M</code>/<code>1Y</code>.</p>
+
+<h2>Кнопка в диалоге Alt+Enter</h2>
+<p>Как только оба условия выполнены (главный переключатель включён, соответствующий ключ задан), рядом с «OK» появляется «Загрузить». При открытии диалога в фоне сразу запускается короткая проверка соединения (не настоящая загрузка, а просто проверка доступности):</p>
+<ul>
+  <li><strong>Проверка соединения…</strong> — проверка выполняется, кнопка ещё неактивна</li>
+  <li><strong>Соединение установлено</strong> — кнопка активна, нажатие запускает настоящую загрузку</li>
+  <li><strong>Недоступно</strong> — кнопка остаётся неактивной, никакой попытки загрузки, которая всё равно провалилась бы</li>
+  <li><strong>Загрузка…</strong> — загрузка выполняется, диалог при этом не блокируется</li>
+  <li><strong>Загружено, ссылка скопирована: …</strong> — готово, ссылка уже в буфере обмена, дополнительный клик не нужен</li>
+  <li><strong>Ошибка: …</strong> — с указанием причины, кнопка снова доступна для повторной попытки</li>
+</ul>
+
+<h2>Замечание по безопасности</h2>
+<p>Все ключи хранятся в открытом виде в <code>SnipClip.ini</code> — как и любая другая настройка, которую сохраняет плагин. Отдельного зашифрованного хранилища для них нет. Если вы передаёте, делаете резервную копию или синхронизируете этот ini-файл, ключи передаются вместе с ним.</p>
+
+</body>
+</html>
