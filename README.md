@@ -4,7 +4,7 @@ A Total Commander plugin that turns your clipboard into a searchable, persistent
 
 ![SnipClip panel with ! menu and overview window](screenshots/overview.png)
 
-*[Deutsche Version](README_de.md) · [Русская версия](README.ru.md)*
+*[Deutsche Version](README.md) · [Русская версия](README.ru.md)*
 
 ## Chapters
 - [What it can](#what-it-can)
@@ -32,7 +32,7 @@ You copy as usual – Ctrl+C, from any program. SnipClip picks that up in the ba
 
 **Screenshots land under `! Screenshots`** – but only from programs you explicitly allow (`[image_capture_sources]` in the ini, whitelist-based, same principle as path resolution). If e.g. FastStone Capture puts an image on the clipboard after closing its capture window, it gets saved automatically as a `.bmp`. Two independent storage limits (`max_screenshots`, `max_total_size_mb`) keep the collection from growing unchecked – whichever hits first trims the oldest screenshot.
 
-**Screenshots can be pinned too** – either standalone (like text: F5/drag & drop from `! Screenshots` into a normal StickySnips category) or linked to an existing note by having both land in the same subfolder. Linked entries show their own column ("Verknuepft") in `! Screenshots` with the linked note's name. Deleting either side of a link only dissolves the link itself – the other element stays fully intact. Details and why it's built this way: see the [linking note](notes/screenshot-linking/screenshot-linking.en.html).
+**Screenshots can be pinned too** – either standalone (like text: F5/drag & drop from `! Screenshots` into a normal StickySnips category) or linked to an existing note by having both land in the same subfolder. Linked entries show their own column ("Verknuepft") in `! Screenshots` with the linked note's name. Deleting either side of a link only dissolves the link itself – the other element stays fully intact. Opening a linked note with F3 shows text and image combined in the Lister – text on top, the image scaled down below preserving its aspect ratio, click it to open full size. Read-only: Ctrl+E falls back to plain text for editing. Details and why it's built this way: see the [linking note](notes/screenshot-linking/screenshot-linking.en.html).
 
 **Every entry automatically shows its source app's icon** in front of the name (extracted from the actual `.exe`) – linked entries get their own chain-link symbol instead. If the source is unknown or that `.exe` is gone, a fallback icon kicks in (built-in, or your own `.ico` via `FallbackSourceIcon=`).
 
