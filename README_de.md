@@ -2,7 +2,7 @@
 
 Ein Total-Commander-Plugin, das deine Zwischenablage in ein durchsuchbares, dauerhaftes Verzeichnis verwandelt. Kein separates Tool, kein Tray-Icon, kein eigenes Fenster, das ständig rumsteht – SnipClip lebt komplett innerhalb von TC, als virtuelles Panel unter `\SnipClip`.
 
-<img width="1919" height="863" alt="2026-08-26_221332" src="https://github.com/user-attachments/assets/706386cb-eb85-4fd2-971b-30a2b7bba0ef" />
+![SnipClip Panel mit ! menu und Übersichtsfenster](screenshots/overview.png)
 
 *[English version](README.en.md) · [Русская версия](README.ru.md)*
 
@@ -41,6 +41,8 @@ Du kopierst wie immer – Strg+C, egal aus welchem Programm. SnipClip fängt das
 Alt+Enter auf einen einzelnen Eintrag zeigt Herkunft, Kategorie (bei gepinnten Snips), Zeitpunkt (absolut und relativ), Bearbeitungsstatus und den vollen Inhalt. Alt+Enter auf eine der Sonderzeilen zeigt stattdessen eine Gesamtübersicht – Laufzeit, Session-Statistik, Quellen-Ranking, StickySnips-Zahlen, Bearbeitungs-Statistik, echte Speicherbelegung.
 
 **Aus genau diesem Alt+Enter-Dialog heraus lässt sich der markierte Eintrag auch direkt hochladen** – Screenshots zu ImgBB, Text (Verlauf, StickySnips, Textbausteine) zu Pastebin. Standardmäßig komplett aus, der Button erscheint erst, wenn du beide Dienste eingerichtet hast; die zurückgegebene URL landet automatisch in der Zwischenablage. Einrichtung Schritt für Schritt: siehe [Cloud-Upload-Handbrief](notes/cloud-upload/cloud-upload.de.html).
+
+**Ein kleines Popup kann jeden Capture bestätigen** – standardmäßig aus. Aktiviert, zeigt es kurz eine Vorschau (Text oder verkleinerter Screenshot) plus den Namen des Quellprogramms in einer Bildschirmecke, verschwindet dann von selbst oder per Klick. Stiehlt nie den Fokus. Bewusst kein Tray-Icon-Ballon oder System-Toast – siehe `[notifications]` weiter unten.
 
 ## Specific
 
@@ -119,6 +121,15 @@ Fünf zusätzliche Spalten über TCs Spalten-Konfiguration: **Edited**, **Diff**
 ### `[cloud_upload]` – ImgBB & Pastebin
 
 Standardmäßig komplett aus (`Enabled=0`) – nichts verlässt diesen Rechner, bis der Hauptschalter **und** der jeweilige Dienst-Key gesetzt sind. Zwei getrennte Dienste, je eigener API-Key: `[cloud_upload_imgbb]` für Screenshots, `[cloud_upload_pastebin]` für Text. Pastebin braucht zusätzlich einen einmaligen Login-Schritt für den User-Key (läuft laut Pastebin nicht ab). Schritt-für-Schritt-Anleitung inklusive PowerShell-Befehl: siehe [Cloud-Upload-Handbrief](notes/cloud-upload/cloud-upload.de.html).
+
+### `[notifications]` – Capture-Popup
+
+Standardmäßig komplett aus (`Enabled=0`). Einmal aktiviert, zeigt jeder Capture (Text oder Screenshot) kurz ein kleines Popup mit Inhalts-Vorschau und dem Namen des Quellprogramms. Bewusst kein Tray-Icon-Ballon oder Windows-Action-Center-Toast – dieses Plugin hat kein Tray-Icon (Design-Entscheidung), und ein moderner Toast bräuchte eine App-Identität/COM-Registrierung, die für eine reine, unverpackte Win32-DLL mit MinGW eher fragil ist. Stattdessen ein eigenes, selbst gezeichnetes Fenster, das nie den Fokus stiehlt (`WS_EX_NOACTIVATE`).
+
+- **`DurationMs`** (Standard 3000) – wie lange es sichtbar bleibt, bevor es von selbst verschwindet; ein Klick blendet sofort aus
+- **`Corner`** (Standard `BottomRight`) – `TopLeft`/`TopRight`/`BottomLeft`/`BottomRight`, welche Ecke des Arbeitsbereichs
+- **`FontSize`** (Standard 14, Bereich 6-72) – die Quellenzeile darunter bleibt automatisch ~2pt kleiner
+- **`IgnoreTheme`** (Standard 0) – 1 = immer festes Weiß/Schwarz, unabhängig von `[Theme]`/`NoColors=`, für garantierte Lesbarkeit unabhängig vom sonstigen Erscheinungsbild des Plugins
 
 ## Architektur, kurz erklärt
 
