@@ -2,7 +2,8 @@
 
 Ein Total-Commander-Plugin, das deine Zwischenablage in ein durchsuchbares, dauerhaftes Verzeichnis verwandelt. Kein separates Tool, kein Tray-Icon, kein eigenes Fenster, das ständig rumsteht – SnipClip lebt komplett innerhalb von TC, als virtuelles Panel unter `\SnipClip`.
 
-![SnipClip Panel mit ! Menü und Übersichtsfenster](screenshots/overview.png)
+<img width="1920" height="870" alt="2026-11-04_154122" src="https://github.com/user-attachments/assets/1e95f1d2-10dc-456d-a67d-240995033a27" />
+
 
 *[English version](README.en.md) · [Русская версия](README.ru.md) · [Українська версія](README.uk.md) · [Dansk version](README.da.md)*
 
